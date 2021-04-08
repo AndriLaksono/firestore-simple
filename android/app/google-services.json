@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "354563395436",
+    "firebase_url": "https://flutter-purple-default-rtdb.firebaseio.com",
+    "project_id": "flutter-purple",
+    "storage_bucket": "flutter-purple.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:354563395436:android:32950e53fc4b1620e46d49",
+        "android_client_info": {
+          "package_name": "com.andri.firestore_crud_id"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "354563395436-mosd32o12qm0ukfak95nb4od24trdi2j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPbspD1qwUE_iOKUYnATCIFmQo9MuiSl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "354563395436-mosd32o12qm0ukfak95nb4od24trdi2j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
