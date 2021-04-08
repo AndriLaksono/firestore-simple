@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import './item_card.dart';
 
 class MainPage extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
@@ -7,10 +10,24 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference users = firestore.collection('users');
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blue[900],
-          title: Text('Firestore Demo woy'),
+          title: StreamBuilder<DocumentSnapshot>(
+            stream: users.doc('PJoGA0jnBfpxFkBGDz07').snapshots(),
+            // initialData: initialData ,
+            builder: (BuildContext _, AsyncSnapshot snapshot){
+              if (snapshot.hasData) {
+                return Text(snapshot.data.data()['age'].toString());
+              } else {
+                return Text('Loading');
+              }
+            },
+          ),
         ),
         backgroundColor: Colors.white,
         body: Stack(
@@ -18,6 +35,47 @@ class MainPage extends StatelessWidget {
             ListView(
               children: [
                 //// VIEW DATA HERE
+                StreamBuilder<QuerySnapshot>(
+                  stream: users.orderBy('age', descending: true).snapshots(),
+                  // initialData: [],
+                  builder: (BuildContext _, AsyncSnapshot snapshot){
+                    if (snapshot.hasData) {
+                      return Column(
+                        children: snapshot.data.docs.map<Widget>(
+                          (e) => ItemCard(
+                            e.data()['name'],
+                            e.data()['age'],
+                            onUpdate: () {
+                              users.doc(e.id).update({
+                                'age': (e.data()['age'] + 1)
+                              });
+                            },
+                            onDelete: () {
+                              users.doc(e.id).delete();
+                            },
+                          )
+                        ).toList(),
+                      );
+                    } else {
+                      return Center(child: Text('Loading'));
+                    }
+                  },
+                ),
+                
+                // ==== ONE GET
+                // FutureBuilder<QuerySnapshot>(
+                //   future: users.get(),
+                //   // initialData: InitialData,
+                //   builder: (BuildContext _, AsyncSnapshot snapshot) {
+                //     if (snapshot.hasData) {
+                //       return Column(
+                //         children: snapshot.data.docs.map<Widget>((e) => ItemCard(e.data()['name'], e.data()['age'])).toList(),
+                //       );
+                //     } else {
+                //       return Text('Loading..');
+                //     }
+                //   },
+                // ),
                 SizedBox(
                   height: 150,
                 )
@@ -73,6 +131,10 @@ class MainPage extends StatelessWidget {
                             ),
                             onPressed: () {
                               //// ADD DATA HERE
+                              users.add({
+                                'name': nameController.text,
+                                'age': int.tryParse(ageController.text) ?? 0
+                              });
                             }),
                       )
                     ],
